@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block TITLE %}Instruction delete{% endblock %}
+{% block content %}
+<h1 style="color: #16b0f2;">Delete: {{ object.name }}</h1>
+
+<form style="color: #16b0f2;" action="{% url 'testUser:instruction-delete' object.pk %}" method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete this instruction?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}

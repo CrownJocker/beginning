@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>sidebar</title>
+	<link rel="stylesheet" href= '{% static "css/sidebarStyle.css" %}'>
+</head>
+<body>
+	<div class="menu">
+		<div class="title"><h1><span>N</span>AVIGATION</h1></div>
+		<div class="list_menu">
+			<ul>
+				<li><a href="">Home</a></li>
+				<li><a href="">About me</a></li>
+				<li><a href="">Portfolio</a></li>
+				<li><a href="">Contact</a></li>
+			</ul>
+		</div>
+		<div class="footer_menu">
+			<p>Footer</p>
+		</div>
+	</div>
+	<div class="content">
+		<img width="100%" src="{% static 'media/city1.jpg' %}" alt="">
+	</div>
+</body>
+</html>

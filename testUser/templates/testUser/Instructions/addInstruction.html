@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block TITLE %}Add Instruction{% endblock %}
+
+{% block content %}
+<h2 style="color: #16b0f2;">Instruction creating</h2><br>
+<form action="" method="post" style="color: #16b0f2;">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}

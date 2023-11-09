@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block TITLE %}View IP address{% endblock %}
+
+{% block content %}
+<h3 style="color: #16b0f2;">View IP {{ object.ip_address }}</h3>
+<h5 style="color: #16b0f2;">Filial name: {{ object.filial }}</h5>
+<h5 style="color: #16b0f2;">Department name: {{ object.department }}</h5>
+<h5 style="color: #16b0f2;">Subject type: {{ object.type_subject }}</h5>
+<h5 style="color: #16b0f2;">Inventory number: {{ object.inventory_number }}</h5>
+<h5 style="color: #16b0f2;">Is active: {{ object.is_active }}</h5>
+<h5 style="color: #16b0f2;">Description: {{ object.start_ip.description }}</h5>
+{% endblock %}

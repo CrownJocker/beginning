@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block TITLE %}Add IP Address{% endblock %}
+
+{% block content %}
+<form  method="post" style="color: #16b0f2;">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class="btn btn-info" value="Сгенерировать">
+</form>
+
+{% endblock %}

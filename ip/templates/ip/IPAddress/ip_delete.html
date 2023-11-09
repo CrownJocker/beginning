@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block TITLE %}IP delete{% endblock %}
+{% block content %}
+<h1 style="color: #16b0f2;">Delete IP {{ object.ip_address }}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <button type="submit" class= "btn btn-danger">Delete</button>
+</form>
+{% endblock %}

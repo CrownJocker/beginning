@@ -1,0 +1,15 @@
+
+main > .container {
+  padding: 60px 15px 0;
+}
+#navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  /* Другие стили для навбара */
+}
+
+#content-container {
+  margin-top: 50px; /* Задайте нужное значение отступа сверху */
+  /* Другие стили для контейнера контента */
+}

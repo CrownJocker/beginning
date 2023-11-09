@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block TITLE %}Edit Dept{% endblock %}
+
+{% block content %}
+
+<form action="" method="post" style="color: #16b0f2;">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}

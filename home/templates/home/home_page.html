@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block TITLE %}Home page{% endblock %}
+{% block content %}
+<h1 style="color: #2f7bc2;">Home Page</h1>
+<h4 style="color: #16b0f2;">Username: {{ user.username }} </h4>
+<h4 style="color: #16b0f2;">auth: {{ user.is_authenticated }} </h4>
+<h4 style="color: #16b0f2;">Anonym: {{ user.is_anonymous }} </h4>
+<h4 style="color: #16b0f2;">First name: {{ user.first_name }} </h4>
+<h4 style="color: #16b0f2;">Position: {{ user.position }} </h4>
+<h4 style="color: #16b0f2;">Is superuser: {{ user.is_superuser }} </h4>
+<h4 style="color: #16b0f2;">Groups: {{ user.groups }} </h4>
+<h4 style="color: #16b0f2;">Filial: {{ user.filial }} </h4>
+<h4 style="color: #16b0f2;">Department: {{ user.department }} </h4>
+<h4 style="color: #16b0f2;">{% if user.is_authenticated %}</h4>
+{% endif %}
+
+{% if user.is_superuser %}
+    <h4 style="color: #16b0f2;">Megasecret text</h4>
+{% endif %}
+
+{% endblock %}

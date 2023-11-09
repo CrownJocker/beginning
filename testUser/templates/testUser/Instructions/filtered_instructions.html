@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block TITLE %}Filtered Instructions{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h1 style="color: #16b0f2;">Filtered Instructions</h1>
+
+<form method="get" style="color: #16b0f2;">
+    {{ filter.form|crispy}}
+    <button type="submit" class="btn btn-info">Apply Filter</button>
+</form><br>
+{% if filtered_instructions %}
+<h2 style="color: #16b0f2;">Filtered Instructions</h2>
+<ul>
+    <table class="table table-info table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Filial</th>
+            {% if user.is_staff %}
+            <th>Действия</th>
+            {% endif %}
+        </tr>
+        </thead>
+        {% for instruction in filtered_instructions %}
+
+
+        <tbody>
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ instruction.name }}</td>
+            <td>{{ instruction.filial }}</td>
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'testUser:instruction-update' instruction.pk%} ">Редактировать</a>
+                <a href="{% url 'testUser:instruction-view' instruction.pk%} ">Просмотреть</a>
+                <a href="{% url 'testUser:instruction-delete' instruction.pk%} ">Удалить</a>
+            </td>
+            {% endif %}
+        </tr>
+        </tbody>
+
+        {% empty %}
+        <li style="color: #16b0f2;">Instructions not found.</li>
+        {% endfor %}
+
+    </table>
+</ul>
+{% else %}
+    <p style="color: #16b0f2;">No instructions found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block TITLE %}Update IP{% endblock %}
+{% block content %}
+
+<form action="" method="post" style="color: #16b0f2;">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class= "btn btn-info">Submit</button>
+</form>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning" role="alert" style="width: 400px; height: 60px; text-align: center;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+{% if messages %}
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+  <!-- Позиционируйте его: -->
+  <!-- - `.toast-container` для промежутка между тостами -->
+  <!-- - `top-0` и `end-0` чтобы тосты располагались в правом верхнем углу -->
+  <!-- - `.p-3` чтобы тосты не прилипали к краю контейнера  -->
+    {% for message in messages %}
+  <div class="toast-container top-0 end-0 p-3">
+
+    <!-- Затем положите тосты внутрь -->
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Bootstrap</strong>
+        <small class="text-body-secondary">прямо сейчас</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+      </div>
+      <div class="toast-body">
+        {{ message }}
+      </div>
+    </div>
+
+  </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

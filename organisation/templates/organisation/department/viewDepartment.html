@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block TITLE %}View Dept{% endblock %}
+
+{% block content %}
+
+<h3 style="color: #16b0f2;">View Dept {{ object.pk }}</h3>
+<b style="color: #16b0f2;"><i>Actions:</i></b>
+<a href="{% url 'organisation:dept-update-sdv' object.pk%} " style="color: #16b0f2;">Редактировать</a>
+<a href="{% url 'organisation:dept-delete-sdv' object.pk%} " style="color: #16b0f2;">Удалить</a>
+<br><br>
+
+{% for subDept in subDepts %}
+
+{% if object.id == subDept.department.id %}
+
+    <h4 style="color: #16b0f2;">{{ subDept.name }}</h4>
+<h5 style="color: #16b0f2;">SubDepartment code: {{ subDept.subDeptCode }}</h5><br>
+
+{% endif %}
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block TITLE %}IP catalog{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% block content %}
+<link href='{% static "css/filter.css" %}' rel="stylesheet">
+
+<h1 style="color: #2f7bc2;">IP catalog</h1>
+
+<form method="get" action="{% url 'ip:filter_results' %}" style="color: #2f7bc2;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Фильтровать</button>
+</form>
+
+
+
+<h3 style="color: #2f7bc2;">Количество активных адресов: {{ip_is_active}}. Количество неактивных адресов: {{ip_is_unactive}}</h3>
+
+<table class="table table-striped table-info">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Inventory number</th>
+            <th>IP</th>
+            <th>Type subject</th>
+            <th>Is active</th>
+            {% if user.is_staff %}
+            <th>Действия</th>
+            <th scope="col">#</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ object.inventory_number }}</td>
+            <td>{{ object.ip_address }}</td>
+            <td>{{ object.type_subject }}</td>
+            <td>{{ object.is_active }}</td>
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'ip:update-ip' object.pk%}">Редактировать</a>
+                <a href="{% url 'ip:detail-ip' object.pk%}">Просмотреть</a>
+                <a href="{% url 'ip:delete-ip' object.pk%}">Удалить</a>
+            </td>
+            <td><input type="checkbox" name="selected_instructions" value="{{ object.pk }}"></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<style>
+    .alert {
+        position: fixed;
+        bottom: 0;
+        left: 1050px;
+        width: 400px;
+        height: 60px;
+        background-color: #dff0d8;
+        border: 1px solid #d6e9c6;
+        padding: 10px;
+        box-sizing: border-box;
+        z-index: 9999;
+    }
+</style>
+{% if messages %}
+    {% for message in messages|slice:":3" %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+    {% endfor %}
+{% endif %}
+
+<br>
+{% endblock %}

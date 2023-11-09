@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block TITLE %}IP catalog{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+{% block content %}
+<link href='{% static "css/filter.css" %}' rel="stylesheet">
+
+<h1 style="color: #2f7bc2;">IP catalog</h1>
+
+<form method="get" action="{% url 'ip:filter_results' %}" class="form-inline" style="color: #2f7bc2;">
+    {% csrf_token %}
+    {{ filter.form|crispy }}
+    <input type="submit" value="Filter" class= "btn btn-info" role="button">
+</form>
+<br>
+<h2 style="color: #2f7bc2;">Filtered IP Addresses</h2>
+<ul>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Inventory number</th>
+            <th>IP</th>
+            <th>Type subject</th>
+            <th>Is active</th>
+            {% if user.is_staff %}
+            <th>Действия</th>
+            {% endif %}
+        </tr>
+        </thead>
+
+        {% for ip_address in filtered_ip_addresses %}
+
+        <tbody>
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ ip_address.inventory_number }}</td>
+            <td>{{ ip_address.ip_address }}</td>
+            <td>{{ ip_address.type_subject }}</td>
+            <td>{{ ip_address.is_active }}</td>
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'ip:update-ip' ip_address.pk%} ">Редактировать</a>
+                <a href="{% url 'ip:detail-ip' ip_address.pk%} ">Просмотреть</a>
+                <a href="{% url 'ip:delete-ip' ip_address.pk%} ">Удалить</a>
+            </td>
+            {% endif %}
+        </tr>
+        </tbody>
+
+        {% empty %}
+        <li>No IP addresses found.</li>
+        {% endfor %}
+    </table>
+</ul>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+        $(document).ready(function() {
+            $('select').select2();
+        });
+</script>
+
+{% endblock %}

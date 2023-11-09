@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block TITLE %}Instruction{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% csrf_token %}
+<title style="color: #16b0f2;">Инструкции</title>
+
+<form style="color: #16b0f2;" method="get" action="{% url 'testUser:instruction_filter_results' %}">
+    <div class="form-group">
+        {{ filter.form.name|crispy }}
+    </div>
+    <div class="form-group">
+        {{ filter.form.filial|crispy }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Фильтровать</button>
+</form>
+<br>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('select').select2();
+    });
+
+</script>
+
+<h1 style="color: #16b0f2;">Инструкции</h1><br>
+
+<form id="myForm">
+
+    <div class="actions">
+
+
+        <label style="color: #16b0f2;">Действие: <select name="action" required>
+            <option value="" selected>---------</option>
+
+            <option value="delete_selected" style="color: #16b0f2;">Удалить выбранные Инструкции</option>
+
+        </select></label><input type="hidden" name="select_across" value="0" class="select-across">
+
+
+        <button type="submit" class="btn btn-info" title="Выполнить выбранное действие" name="index" value="0">Выполнить</button>
+
+
+        <span class="action-counter" data-actions-icnt="5" style="color: #16b0f2;">Выбрано 0 объектов из {{ inst_count }} </span>
+
+
+    </div>
+
+    <table style="opacity: 0.95;" class="table table-bordered border-dark table-info">
+        <thead>
+        <tr>
+            <th scope="col" class="action-checbox-column">
+                <div class="text">
+                <span>
+                    <input type="checkbox" id="action-toggle">
+                </span>
+                </div>
+                <div class="clear"></div>
+            </th>
+            <th scope="col">#</th>
+            <th scope="col">Название инструкции</th>
+
+            {% if user.is_staff %}
+            <th>Действия</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+        {% for object in object_list %}
+
+        {% if object.filial|stringformat:"s" == user.filial|stringformat:"s" or user.is_superuser %}
+
+        <tr class>
+            <td class="action-checkbox">
+                <input type="checkbox" name="selected_instructions" value="{{ object.pk }}" class="action-select">
+            </td>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td><a href="{% url 'testUser:instruction-view' object.pk%} ">{{ object.name }}</a></td>
+
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'testUser:instruction-update' object.pk%} ">Редактировать</a>
+                <a href="{% url 'testUser:instruction-view' object.pk%} ">Просмотреть</a>
+                <a href="{% url 'testUser:instruction-delete' object.pk%} ">Удалить</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <br>
+</form>
+
+<script>
+    // Получаем чекбокс в <thead>
+    const headerCheckbox = document.getElementById('action-toggle');
+
+    // Получаем все чекбоксы в столбце
+    const checkboxes = document.querySelectorAll('.action-select');
+
+    // Добавляем обработчик события для чекбокса в <thead>
+    headerCheckbox.addEventListener('change', function() {
+        // Проходимся по всем чекбоксам в столбце
+        checkboxes.forEach(function(checkbox) {
+            // Устанавливаем состояние каждого чекбокса в соответствии с чекбоксом в <thead>
+            checkbox.checked = headerCheckbox.checked;
+        });
+    });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('myForm');
+    const checkboxes = document.querySelectorAll('.action-select');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Предотвращаем стандартное поведение отправки формы
+
+        const selectedInstructions = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        // Отправляем AJAX-запрос для удаления выбранных инструкций
+        fetch('/testUser/instruction-delete-sdv/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Замените на фактический CSRF-токен
+            },
+            body: JSON.stringify({ selected_instructions: selectedInstructions })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Обновляем страницу или показываем сообщение об успехе
+                location.reload(); // Замените на нужное действие
+            } else {
+                // Обрабатываем ошибку
+                console.error('Ошибка:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    });
+});
+</script>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if user.is_staff %}<a href="{% url 'testUser:instruction-add'%}" class="btn btn-info" role="button">Создание
+    инструкции</a>{% endif %}
+{% endblock %}

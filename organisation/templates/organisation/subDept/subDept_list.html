@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block TITLE %}SubDept list{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+    <tr>
+        <th>pk</th>
+        <th>Подотдел</th>
+        <th>Отдел</th>
+        <th>Код подотдела</th>
+        <th>Действия</th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.pk }}</td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.department }}</td>
+        <td>{{ obj.subDeptCode }}</td>
+        <td>
+            <a href="/subDept-update-sdv/{{ obj.pk }}">update</a>
+            <a href="/subDept/{{ obj.pk }}">view</a>
+            <a href="/subDept-delete-sdv/{{ obj.pk }}">delete</a>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

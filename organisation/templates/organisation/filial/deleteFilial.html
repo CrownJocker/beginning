@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block TITLE %}Filial delete{% endblock %}
+{% block content %}
+<h1 style="color: #16b0f2;">Delete {{ object.name }}</h1>
+<form action="" method="post" style="color: #16b0f2;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}

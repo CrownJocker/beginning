@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block TITLE %}Catalogs{% endblock %}
+{% block content %}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% for object in filials %}
+{% if object.name|stringformat:"s" == user.filial|stringformat:"s" or user.is_superuser %}
+<button class="accordion">{{ object.name }}</button>
+<div class="panel">
+    {% for department in departments %}
+    {% if object.name == department.filial.name %}
+    {% if department.name|stringformat:"s" == user.department|stringformat:"s" or user.is_superuser %}
+    <button class="sub-accordion">{{ department.name }}</button>
+    <div class="sub-panel">
+        <table class="table table-striped" bgcolor="#7a3ea8">
+            <thead>
+            <tr>
+                <th>Название подотдела</th>
+                <th>Код подотдела</th>
+                <th>Описание отдела</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for subdepartment in subdepartments %}
+            {% if department.name == subdepartment.department.name %}
+            <tr>
+                <td><a href="{% url 'organisation:subDept-view-sdv' subdepartment.pk%} ">{{ subdepartment.name }}</a></td>
+                <td>{{ subdepartment.subDeptCode }}</td>
+                <td>{{ subdepartment.description }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endfor %}
+
+<script src="{% static 'js/script.js' %}"></script>
+
+{% endblock %}

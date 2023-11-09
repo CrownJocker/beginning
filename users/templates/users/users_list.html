@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block TITLE %}SubDept list{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+    <tr>
+        <th>Код подотдела</th>
+        <th>Действия</th>
+    </tr>
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ obj.is_active }}</td>
+        <td>{{ obj.is_admin }}</td>
+    </tr>
+    {% endfor %}
+</table>
+Hi
+{% endblock %}

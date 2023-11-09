@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block TITLE %}View Filial{% endblock %}
+
+{% block content %}
+
+<h3 style="color: #16b0f2;">View Filial {{ object.pk }}</h3><br>
+
+{% for dept in departments %}
+
+{% if object.id == dept.filial.id %}
+
+    <h4 style="color: #16b0f2;">{{ dept.name }}</h4>
+<h6 style="color: #16b0f2;">Description: {{ dept.description }}</h6>
+<h6 style="color: #16b0f2;">Department code: {{ dept.deptCode }}</h6><br>
+
+{% endif %}
+{% endfor %}
+
+{% endblock %}

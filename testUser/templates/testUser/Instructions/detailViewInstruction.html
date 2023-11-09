@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block TITLE %}Detail view Instruction{% endblock %}
+{% csrf_token %}
+{% block content %}
+
+<h3 style="color: #16b0f2;">View Instruction {{ object.pk }}</h3>
+
+{% for step in steps %}
+{% if step.instruction == object %}
+
+<h3 style="color: #16b0f2;">{{ step }}</h3>
+
+<h5 style="color: #16b0f2;">*Descr* {{ step.description }}</h5>
+<img src="{{ step.illustration.url }}" class="figure-img img-fluid rounded" alt="Иллюстрация" style="width: 300px; height: 200px;">
+{% if step.caption != None %}
+    <figcaption class="figure-caption" style="color: #f2c363;">{{ step.caption }}</figcaption>
+{% endif %}
+
+{% endif %}
+<br>
+{% endfor %}
+
+{% endblock %}

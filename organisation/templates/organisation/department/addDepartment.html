@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block TITLE %}Add Department page{% endblock %}
+{% block content %}
+
+<form style="color: #16b0f2;" action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+
+{% endblock %}

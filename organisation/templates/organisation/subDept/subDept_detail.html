@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block TITLE %}<title>Detail</title>{% endblock %}
+{% block content %}
+<h1 style="color: #16b0f2;">SubDept details</h1>
+<a href="{% url 'organisation:subDept-update-sdv' object.pk%} ">Редактировать</a>
+<a href="{% url 'organisation:subDept-delete-sdv' object.pk%} ">Удалить</a>
+{% endblock %}

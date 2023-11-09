@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block TITLE %}Home page{% endblock %}
+{% block content %}
+
+    <table class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Название филиала</th>
+        <th>Код филиала</th>
+        <th>Описание филиала</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.filialCode }}</td>
+        <td>{{ object.description }}</td>
+        <td>
+            <a href="{% url 'testUser:filial-update-sdv' object.pk%} ">Редактировать</a>
+            <a href="{% url 'testUser:filial-view-sdv' object.pk%} ">Просмотреть</a>
+            <a href="{% url 'testUser:filial-delete-sdv' object.pk%} ">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table><br>
+
+<table class="table table-striped" id="DeptTable">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Название отдела</th>
+        <th>Код отдела</th>
+        <th>Филиал отдела</th>
+        <th>Описание отдела</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.deptCode }}</td>
+        <td>{{ object.filial }}</td>
+        <td>{{ object.description }}</td>
+        <td>
+            <a href="{% url 'testUser:dept-update-sdv' object.pk%} ">Редактировать</a>
+            <a href="{% url 'testUser:dept-view-sdv' object.pk%} ">Просмотреть</a>
+            <a href="{% url 'testUser:dept-delete-sdv' object.pk%} ">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table><br>
+{% endblock %}
+
+
