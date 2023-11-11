@@ -6,6 +6,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 
 
+@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
@@ -24,6 +25,4 @@ class CustomUserAdmin(UserAdmin):
                              }),
 
     )
-
-
-admin.site.register(CustomUser, CustomUserAdmin)
+    list_display = ('username', 'email', 'first_name', 'last_name', 'position', 'is_staff')

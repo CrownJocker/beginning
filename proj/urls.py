@@ -38,15 +38,17 @@ urlpatterns = [
     path('ip/', include('ip.urls', namespace='ip')),
     path('', home_views.HomePage.as_view(), name="home-page"),
 
-    # Login/Logout
+    #
     path('', include(router.urls)),
-    path('api/login/', Authorisation.as_view()),
-    path('api/logout/', Logout.as_view()),
-    path('api/authenticated/', Authenticated.as_view()),
+
 
     # Users
     path('api/usersDetail/', UserDetail.as_view()),
     path('api/users-list-view/', UserListView.as_view()),
+
+    # Positions
+    path('api/positions-detail/<int:pk>', PositionsUpdateViewApi.as_view()),
+    path('api/positions-list-view/', PositionsListApi.as_view()),
 
     # TypeSubject
     path('api/TypeSubject-view/<int:pk>', TypeSubjectViewApi.as_view()),

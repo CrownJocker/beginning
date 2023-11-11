@@ -1,29 +1,53 @@
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, generics
-from rest_framework.response import Response
+from rest_framework import generics
 from drf_spectacular.utils import extend_schema_view, extend_schema
-
+from permissions.permissions import IsHeadOfDepartment, IsMembers
 from ip.serializer.serializers import *
 
 
 @extend_schema_view(
     get=extend_schema(summary='Получение данных об устройстве', tags=['Тип устройства']),
     put=extend_schema(summary='Изменение данных об устройстве', tags=['Тип устройства']),
-    patch=extend_schema(summary='Частичное измменение данных об устройстве', tags=['Тип устройства']),
+    patch=extend_schema(summary='Частичное изменение данных об устройстве', tags=['Тип устройства']),
     delete=extend_schema(summary='Удаление данных об устройстве', tags=['Тип устройства']),
 )
 class TypeSubjectViewApi(generics.RetrieveUpdateDestroyAPIView):
     queryset = TypeSubject.objects.all()
     serializer_class = TypeSubjectCreateSerializer
 
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            permission_classes = [IsMembers]
+        elif self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise Http404("Объект не найден")
+
 
 @extend_schema_view(
     get=extend_schema(summary='Получение данных об устройстве', tags=['Тип устройства']),
-    post=extend_schema(summary='Создание данных об устройстве', tags=['Тип устройства']),
+    post=extend_schema(summary='Создание нового устройстве', tags=['Тип устройства']),
 )
 class TypeSubjectListApi(generics.ListCreateAPIView):
     queryset = TypeSubject.objects.all()
     serializer_class = TypeSubjectSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [IsMembers]
+        elif self.request.method == 'POST':
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         if self.request.method in ['POST']:
@@ -41,6 +65,15 @@ class IPAddressUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = IPAddress.objects.all()
     serializer_class = IPAddressUpdateSerializer
 
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            permission_classes = [IsMembers]
+        elif self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
 
 @extend_schema_view(
     get=extend_schema(summary='IP-адрес', tags=['IP-адрес']),
@@ -51,6 +84,15 @@ class IPAddressListCreateView(generics.ListCreateAPIView):
     queryset = IPAddress.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'start_ip', 'filial', 'department', 'type_subject', 'ip_address']
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [IsMembers]
+        elif self.request.method == 'POST':
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         if self.request.method in ['POST']:

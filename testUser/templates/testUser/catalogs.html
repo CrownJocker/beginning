@@ -11,8 +11,7 @@
 <div class="panel">
     {% for department in departments %}
     {% if object.name == department.filial.name %}
-    {% if department.name|stringformat:"s" == user.department|stringformat:"s" or user.is_superuser %}
-    <button class="sub-accordion">{{ department.name }}</button>
+     <button class="sub-accordion">{{ department.name }}</button>
     <div class="sub-panel">
         <table class="table table-striped" bgcolor="#7a3ea8">
             <thead>
@@ -36,8 +35,7 @@
             </tbody>
         </table>
     </div>
-    {% endif %}
-    {% endif %}
+     {% endif %}
     {% endfor %}
 </div>
 {% endif %}

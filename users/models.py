@@ -29,7 +29,6 @@ class CustomUser(AbstractUser):
         blank=True
     )
 
-
     class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'

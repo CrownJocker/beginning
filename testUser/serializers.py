@@ -7,6 +7,12 @@ from users.models import CustomUser
 from rest_framework.generics import get_object_or_404
 
 
+class PositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = '__all__'
+
+
 class CustomUserShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

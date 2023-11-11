@@ -8,11 +8,15 @@ all_permissions = Permission.objects.all()
 
 class Position(models.Model):
     position = models.CharField(
-        verbose_name="Position",
+        verbose_name="Должность",
         max_length=255,
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = 'Должность'
+        verbose_name_plural = 'Должности'
 
     def __str__(self):
         return self.position
@@ -20,7 +24,7 @@ class Position(models.Model):
 
 class Instruction(models.Model):
     name = models.CharField(
-        verbose_name="Instruction name",
+        verbose_name="Название инструкции",
         max_length=255,
         blank=True,
         null=True,
@@ -28,7 +32,7 @@ class Instruction(models.Model):
     filial = models.ForeignKey(
         Filial,
         on_delete=models.PROTECT,
-        verbose_name="Filial",
+        verbose_name="Филиал",
         related_name='Instructions',
     )
     #steps = models.ForeignKey(
@@ -44,13 +48,17 @@ class Instruction(models.Model):
     #)
     all_view = models.BooleanField(default=False, verbose_name='All_vision')
 
+    class Meta:
+        verbose_name = 'Инструкция'
+        verbose_name_plural = 'Инструкции'
+
     def __str__(self):
         return self.name
 
 
 class StepForInstruction(models.Model):
     name = models.CharField(
-        verbose_name="Step name",
+        verbose_name="Название шага",
         max_length=255,
         blank=True,
         null=True,
@@ -58,24 +66,28 @@ class StepForInstruction(models.Model):
     instruction = models.ForeignKey(
         Instruction,
         on_delete=models.PROTECT,
-        verbose_name="Instruction",
+        verbose_name="Инструкция",
     )
     description = models.TextField(
-        verbose_name='Description',
+        verbose_name='Описание',
         max_length=255,
         blank=True,
         null=True,
     )
     illustration = models.ImageField(
-        verbose_name="Illustration",
+        verbose_name="Иллюстрация",
         blank=True,
     )
     caption = models.CharField(
-        verbose_name='Caption',
+        verbose_name='Подпись',
         max_length=255,
         blank=True,
         null=True,
     )
+
+    class Meta:
+        verbose_name = 'Шаг'
+        verbose_name_plural = 'Шаги для инструкций'
 
     def save(self, *args, **kwargs):
         if not self.illustration and not self.description:
@@ -91,30 +103,34 @@ class StepForInstruction(models.Model):
 
 class PublicHoliday(models.Model):
     name = models.CharField(
-        verbose_name="Holiday name",
+        verbose_name="Название праздника",
         max_length=60,
         blank=True
     )
     holiday_date = models.DateField(
-        verbose_name="Holiday date"
+        verbose_name="Дата праздника"
     )
     descrIPAddresstion = models.TextField(
-        verbose_name="Holiday description",
+        verbose_name="Описание праздника",
         null=True,
         blank=True
     )
     updated = models.DateTimeField(
-        verbose_name="Updated datetime",
+        verbose_name="Время обновления",
         auto_now=True,
         auto_now_add=False,
         blank=True
     )
     created = models.DateField(
-        verbose_name="Created datetime",
+        verbose_name="Время создания",
         auto_now=False,
         auto_now_add=True,
         blank=True
     )
+
+    class Meta:
+        verbose_name = 'Праздник'
+        verbose_name_plural = 'Праздники'
 
     def __str__(self):
         return str(self.pk) + " " + self.name

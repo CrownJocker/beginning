@@ -14,6 +14,27 @@ from testUser.serializers import *
 
 
 @extend_schema_view(
+    get=extend_schema(summary='Получение списка должностей', tags=['Должность']),
+    post=extend_schema(summary='Создание новой должности', tags=['Должность']),
+)
+class PositionsListApi(generics.ListCreateAPIView):
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
+
+
+@extend_schema_view(
+    get=extend_schema(summary='Получение информации об должности', tags=['Должность']),
+    put=extend_schema(summary='Изменение информации об должности', tags=['Должность']),
+    patch=extend_schema(summary='Частичное изменение должности', tags=['Должность']),
+    delete=extend_schema(summary='Удаление должности', tags=['Должность']),
+)
+class PositionsUpdateViewApi(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
+
+
+
+@extend_schema_view(
     get=extend_schema(summary='Получение списка шагов', tags=['Шаги']),
     post=extend_schema(summary='Создание нового шага', tags=['Шаги']),
 )
@@ -91,42 +112,3 @@ class UserListView(generics.ListCreateAPIView):
             return CustomUserCreateSerializer
         return CustomUserEmployeeSerializer
 
-
-@extend_schema_view(
-    post=extend_schema(summary='Авторизация', tags=['Авторизация&Аутентификация']),
-)
-class Authorisation(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        token, created = Token.objects.get_or_create(user=user)
-        user_data = {
-            'token': token.key,
-            'username': user.username,
-        }
-
-        return Response(user_data, content_type='application/json')
-
-
-@extend_schema_view(
-    get=extend_schema(summary='Аутентификация', tags=['Авторизация&Аутентификация']),
-)
-class Authenticated(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        return Response({'message': 'Пользователь аутентифицирован'}, status=status.HTTP_200_OK)
-
-
-@extend_schema_view(
-    post=extend_schema(summary='Выход из системы', tags=['Авторизация&Аутентификация']),
-)
-class Logout(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        # реализация выхода из системы
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
