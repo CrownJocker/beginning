@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block TITLE %}View Group{% endblock %}
+
+{% block content %}
+
+<h3 style="color: #16b0f2;">View Group {{ object.pk }}</h3>
+<h6 style="color: #16b0f2;"> SubDept: {{ object.subDept }}</h6>
+<h6 style="color: #16b0f2;">Group name: {{ object.name }}</h6>
+<h6 style="color: #16b0f2;">Group code: {{ object.groupCode }}</h6>
+<a href="{% url 'organisation:subDept-update-sdv' object.pk%} ">Редактировать</a>
+<a href="{% url 'organisation:subDept-delete-sdv' object.pk%} ">Удалить</a>
+{% endblock %}

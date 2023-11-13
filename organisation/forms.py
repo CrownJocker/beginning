@@ -18,3 +18,9 @@ class SubDeptModelForm(forms.ModelForm):
     class Meta:
         model = SubDepartment
         fields = '__all__'
+
+
+class GroupModelForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = '__all__'

@@ -70,6 +70,10 @@ urlpatterns = [
     path('api/list-subDept/', SubDepartmentListCreateView.as_view()),
     path('api/update-subDept/<int:pk>', SubDepartmentUpdateView.as_view()),
 
+    # Group
+    path('api/list-group/', GroupListCreateView.as_view()),
+    path('api/update-group/<int:pk>', GroupUpdateView.as_view()),
+
     # Instruction
     path('api/list-instruction/', InstructionsListApi.as_view()),
     path('api/update-instruction/<int:pk>', InstructionsUpdateViewApi.as_view()),

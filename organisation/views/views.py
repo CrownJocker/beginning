@@ -65,7 +65,7 @@ class FilialDeleteView(LoginRequiredMixin, FilialBaseView, DeleteView):
         return self.success_message
 
 
-class DepartmentBaseView():
+class DepartmentBaseView:
     login_url = reverse_lazy("staff:login")
     model = Department
     success_url = reverse_lazy("organisation:departments")
@@ -131,7 +131,6 @@ class SubDepartmentBaseView:
     login_url = reverse_lazy("staff:login")
     model = SubDepartment
     success_url = reverse_lazy("organisation:subDepartments")
-    form_class = forms.SubDeptModelForm
 
 
 class SubDepartments(PermissionRequiredMixin, LoginRequiredMixin, SubDepartmentBaseView, ListView):
@@ -141,11 +140,13 @@ class SubDepartments(PermissionRequiredMixin, LoginRequiredMixin, SubDepartmentB
 
 class SubDeptDetailView(LoginRequiredMixin, SubDepartmentBaseView, DetailView):
     template_name = './organisation/subDept/viewSubDepartment.html'
+    form_class = forms.SubDeptModelForm
 
 
 class SubDeptCreateView(LoginRequiredMixin, SubDepartmentBaseView, CreateView):
     template_name = './organisation/subDept/addSubDepartment.html'
     success_message = "Подотдел успешно создан!"
+    form_class = forms.SubDeptModelForm
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -156,6 +157,7 @@ class SubDeptCreateView(LoginRequiredMixin, SubDepartmentBaseView, CreateView):
 class SubDeptUpdateView(LoginRequiredMixin, SubDepartmentBaseView, UpdateView):
     template_name = './organisation/subDept/updateSubDepartment.html'
     success_message = "Подотдел успешно изменён!"
+    form_class = forms.SubDeptModelForm
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -178,7 +180,56 @@ class SubDeptDeleteView(LoginRequiredMixin, SubDepartmentBaseView, DeleteView):
     def get_success_message(self, cleaned_data):
         return self.success_message
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["greeting"] = "hello"
-        return context
+
+class GroupBaseView:
+    login_url = reverse_lazy("staff:login")
+    model = Group
+    success_url = reverse_lazy("organisation:groups")
+
+
+class Groups(PermissionRequiredMixin, LoginRequiredMixin, GroupBaseView, ListView):
+    permission_required = ['organisation.view_group']
+    template_name = './organisation/group/group.html'
+
+
+class GroupDetailView(LoginRequiredMixin, GroupBaseView, DetailView):
+    template_name = './organisation/group/viewGroup.html'
+    form_class = forms.GroupModelForm
+
+
+class GroupCreateView(LoginRequiredMixin, GroupBaseView, CreateView):
+    template_name = './organisation/group/addGroup.html'
+    success_message = "Группа успешно создана!"
+    form_class = forms.GroupModelForm
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
+
+
+class GroupUpdateView(LoginRequiredMixin, GroupBaseView, UpdateView):
+    template_name = './organisation/group/updateGroup.html'
+    form_class = forms.GroupModelForm
+    success_message = "Группа успешно изменена!"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message
+
+
+class GroupDeleteView(LoginRequiredMixin, GroupBaseView, DeleteView):
+    template_name = './organisation/group/deleteGroup.html'
+    success_message = "Группа успешно удалена!"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message

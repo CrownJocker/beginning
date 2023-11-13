@@ -24,4 +24,11 @@ urlpatterns = [
     path("subDept-delete-sdv/<int:pk>", views.SubDeptDeleteView.as_view(), name='subDept-delete-sdv'),
     path("subDept-view-sdv/<int:pk>", views.SubDeptDetailView.as_view(), name='subDept-view-sdv'),
 
+    # Group
+    path('group/', views.Groups.as_view(), name='groups'),
+    path("group-view-sdv/<int:pk>", views.GroupDetailView.as_view(), name='group-view-sdv'),
+    path("group-add-sdv/", views.GroupCreateView.as_view(), name='group-add-sdv'),
+    path("group-update-sdv/<int:pk>", views.GroupUpdateView.as_view(), name='group-update-sdv'),
+    path("group-delete-sdv/<int:pk>", views.GroupDeleteView.as_view(), name='group-delete-sdv'),
+
 ]

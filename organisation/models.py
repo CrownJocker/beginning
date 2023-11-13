@@ -63,7 +63,6 @@ class Department(models.Model):
 
 
 class SubDepartment(models.Model):
-    # id/pk -> integer -> autoincrement
     department = models.ForeignKey(
         Department,
         on_delete=models.PROTECT,
@@ -73,7 +72,7 @@ class SubDepartment(models.Model):
     name = models.CharField(
         verbose_name="Название подотдела",
         max_length=255,
-        help_text="Pls add SubDepartment name",
+        help_text="Добавьте название подотдела",
         blank=True,
         unique=True,
     )
@@ -93,3 +92,32 @@ class SubDepartment(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('testUser: view', kwargs={'pk': self.pk})
+
+
+class Group(models.Model):
+    subDept = models.ForeignKey(
+        SubDepartment,
+        on_delete=models.PROTECT,
+        verbose_name="Подотдел",
+        related_name='group',
+    )
+    name = models.CharField(
+        verbose_name="Название группы",
+        max_length=255,
+        help_text="Добавьте название группы",
+        blank=True,
+        unique=True,
+    )
+    groupCode = models.CharField(
+        verbose_name="Код группы",
+        max_length=24,
+        blank=True,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
+
+    def __str__(self):
+        return self.name

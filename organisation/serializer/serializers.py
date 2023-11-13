@@ -43,3 +43,17 @@ class SubDepartmentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubDepartment
         fields = ['department', 'name', 'subDeptCode']
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    subDept = serializers.SlugRelatedField(slug_field="name", read_only=True)
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class GroupCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['subDept', 'name', 'groupCode']

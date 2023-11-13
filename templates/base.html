@@ -166,6 +166,10 @@
                         <a class="nav-link {% if 'organisation:subDepartments' == request.resolver_match.view_name %}active{% endif %}"
                            href="{% url 'organisation:subDepartments' %}">Подотделы</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'organisation:groups' == request.resolver_match.view_name %}active{% endif %}"
+                           href="{% url 'organisation:groups' %}">Группы</a>
+                    </li>
                 </ul>
                 <form class="d-flex" role="search">
                     {% csrf_token %}

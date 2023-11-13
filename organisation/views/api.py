@@ -147,3 +147,48 @@ class SubDepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
         else:
             permission_classes = []
         return [permission() for permission in permission_classes]
+
+
+@extend_schema_view(
+    get=extend_schema(summary='Получение данных группы', tags=['Группа']),
+    post=extend_schema(summary='Создание новой группы', tags=['Группа']),
+)
+class GroupListCreateView(generics.ListCreateAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id']
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [IsMembers]
+        elif self.request.method == 'POST':
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return GroupCreateSerializer
+        return GroupSerializer
+
+
+@extend_schema_view(
+    get=extend_schema(summary='Группа', tags=['Группа']),
+    put=extend_schema(summary='Изменить группу', tags=['Группа']),
+    patch=extend_schema(summary='Изменить частично группу', tags=['Группа']),
+    delete=extend_schema(summary='Удалить группу', tags=['Группа']),
+)
+class GroupUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupCreateSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            permission_classes = [IsMembers]
+        elif self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsHeadOfDepartment]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]

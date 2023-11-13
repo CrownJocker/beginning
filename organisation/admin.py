@@ -15,3 +15,8 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(SubDepartment)
 class SubDepartmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'subDeptCode', 'id')
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'groupCode', 'id')
