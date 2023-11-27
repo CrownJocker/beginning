@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'users',
     'organisation',
     'ip',
+    'checkDate',
 ]
 
 INSTALLED_APPS += [
@@ -56,6 +57,7 @@ INSTALLED_APPS += [
     'django_filters',
     'drf_yasg',
     'drf_spectacular',
+    'import_export',
 ]
 
 
@@ -93,9 +95,6 @@ STATICFILES_DIR = [
 
 WSGI_APPLICATION = 'proj.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -179,6 +178,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+STATIC_ROOT = BASE_DIR / 'static'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 

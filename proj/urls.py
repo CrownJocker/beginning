@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from home import views as home_views
 from rest_framework import routers
 
+from checkDate.views.api import *
 from testUser.apis import *
 from organisation.views.api import *
 from ip.views.api import *
@@ -24,6 +25,8 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 
 urlpatterns = [
+
+
     # Documentation
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -36,11 +39,12 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('organisation/', include('organisation.urls', namespace='organisation')),
     path('ip/', include('ip.urls', namespace='ip')),
+    path('checkDate/', include('checkDate.urls', namespace='checkDate')),
     path('', home_views.HomePage.as_view(), name="home-page"),
 
-    #
-    path('', include(router.urls)),
-
+    # EventsForUser
+    path('api/events-detail/<int:pk>', EventsUpdateView.as_view()),
+    path('api/events-list-view/', EventsListCreateView.as_view()),
 
     # Users
     path('api/usersDetail/', UserDetail.as_view()),

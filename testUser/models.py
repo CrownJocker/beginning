@@ -14,6 +14,7 @@ class Position(models.Model):
         null=True,
     )
 
+
     class Meta:
         verbose_name = 'Должность'
         verbose_name_plural = 'Должности'

@@ -46,6 +46,7 @@ class Department(models.Model):
         verbose_name="Код отдела",
         max_length=24,
         blank=True,
+        null=True,
         unique=True,
     )
     description = models.TextField(
