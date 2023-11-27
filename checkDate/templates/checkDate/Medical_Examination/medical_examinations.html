@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block TITLE %}Medical Exams{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<h1 style="color: #2f7bc2;">Med Ex</h1>
+
+<table class="table table-striped table-info">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Period</th>
+            <th>date</th>
+            <th>next date</th>
+            {% if user.is_staff %}
+            <th>Действия</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for me in MEs %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ me.period }}</td>
+            <td>{{ me.dateOfMedicalExamination }}</td>
+            <td>{{ me.dateOfNextMedicalExamination }}</td>
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'checkDate:me-update' me.pk%}">Редактировать</a>
+                <a href="{% url 'checkDate:me-view' me.pk%}">Просмотреть</a>
+                <a href="{% url 'checkDate:me-delete' me.pk%}">Удалить</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if messages %}
+    {% for message in messages|slice:":3" %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+    {% endfor %}
+{% endif %}
+
+<br>
+{% endblock %}

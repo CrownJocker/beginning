@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block TITLE %}<title>Data Upload</title>{% endblock %}
+
+{% load static %}
+
+{% block object-tools-items %}
+<li>
+    <a href="csv-upload/" class="addlink">
+      Импорт
+    </a>
+</li>
+{{ block.super }}

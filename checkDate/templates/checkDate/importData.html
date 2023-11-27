@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block TITLE %}Data import{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div>
+    <form action="." method="POST" enctype="multipart/form-data">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Загрузка CSV</button>
+    </form>
+</div>
+{% endblock %}
