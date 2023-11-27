@@ -46,6 +46,18 @@ urlpatterns = [
     path('api/events-detail/<int:pk>', EventsUpdateView.as_view()),
     path('api/events-list-view/', EventsListCreateView.as_view()),
 
+    # UserForDate
+    path('api/user-date-detail/<int:pk>', UserForDateUpdateView.as_view()),
+    path('api/user-date-list-view/', UserForDateListCreateView.as_view()),
+
+    # MedicalExamination
+    path('api/ME-detail/<int:pk>', MEUpdateView.as_view()),
+    path('api/ME-list-view/', MEListCreateView.as_view()),
+
+    # KnowledgeTest
+    path('api/KT-detail/<int:pk>', KTUpdateView.as_view()),
+    path('api/KT-list-view/', KTListCreateView.as_view()),
+
     # Users
     path('api/usersDetail/', UserDetail.as_view()),
     path('api/users-list-view/', UserListView.as_view()),

@@ -26,3 +26,47 @@ class EventsCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventsForUser
         fields = ['user', 'medicalExamination', 'knowledgeTest']
+
+
+class UserForDateCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserForDate
+        fields = ['full_name', 'dept', 'position']
+
+
+class UserForDateSerializer(serializers.ModelSerializer):
+    dept = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    position = serializers.SlugRelatedField(slug_field="position", read_only=True)
+
+    class Meta:
+        model = UserForDate
+        fields = ['full_name', 'dept', 'position']
+
+
+class MESerializer(serializers.ModelSerializer):
+    period = serializers.SlugRelatedField(slug_field="name", read_only=True)
+
+    class Meta:
+        model = MedicalExamination
+        fields = ['period', 'dateOfMedicalExamination', 'dateOfNextMedicalExamination']
+
+
+class MECreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalExamination
+        fields = ['period', 'dateOfMedicalExamination', 'dateOfNextMedicalExamination']
+
+
+class KTSerializer(serializers.ModelSerializer):
+    period = serializers.SlugRelatedField(slug_field="name", read_only=True)
+
+    class Meta:
+        model = KnowledgeTest
+        fields = ['period', 'dateOfKnowledgeTest', 'dateOfNextKnowledgeTest']
+
+
+class KTCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KnowledgeTest
+        fields = ['period', 'dateOfKnowledgeTest', 'dateOfNextKnowledgeTest']

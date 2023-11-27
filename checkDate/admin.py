@@ -255,4 +255,4 @@ class PeriodAdmin(ImportExportModelAdmin):
 
 @admin.register(UserForDate)
 class UserForDateAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'dept', 'position')
+    list_display = ('full_name', 'dept', 'position', 'id')
