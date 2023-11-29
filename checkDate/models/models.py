@@ -11,6 +11,22 @@ class ImportData(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
 
 
+class Status(models.Model):
+    status = models.CharField(
+        verbose_name="Статус",
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.status
+
+    class Meta:
+        verbose_name = 'Статус'
+        verbose_name_plural = 'Статусы'
+
+
 class EventsForUser(models.Model):
     user = models.ForeignKey(
         "UserForDate",
@@ -48,19 +64,34 @@ class UserForDate(models.Model):
         on_delete=models.PROTECT,
         verbose_name="Отдел",
         related_name="users",
+        null=True,
+        blank=True,
     )
-    position = models.ForeignKey(
+    position = models.ManyToManyField(
         Position,
-        on_delete=models.PROTECT,
         verbose_name="Должность",
+        blank=True,
+    )
+    status = models.ForeignKey(
+        Status,
+        on_delete=models.PROTECT,
+        verbose_name="Статус",
+        null=True,
+        blank=True,
+    )
+    order_number = models.CharField(
+        verbose_name="Номер приказа",
+        max_length=256,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
         return self.full_name
 
     class Meta:
-        verbose_name = 'Что-то'
-        verbose_name_plural = 'Такое'
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'
 
 
 class Period(models.Model):
@@ -146,9 +177,20 @@ class KnowledgeTest(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if self.dateOfKnowledgeTest and self.period and self.period.period:
-            self.dateOfNextKnowledgeTest = self.dateOfKnowledgeTest + timedelta(days=self.period.period)
+        #if self.dateOfKnowledgeTest and self.period and self.period.period:
+        #    self.dateOfNextKnowledgeTest = self.dateOfKnowledgeTest + timedelta(days=self.period.period)
+        #super().save(*args, **kwargs)
+        if self.dateOfKnowledgeTest and self.period.period is not None:
+            if type(self.dateOfKnowledgeTest) == str and self.period.period is not None:
+                date_obj = datetime.strptime(self.dateOfKnowledgeTest, '%Y-%m-%d')
+                next_date_obj = date_obj + timedelta(days=self.period.period)
+                self.dateOfNextKnowledgeTest = next_date_obj.strftime('%Y-%m-%d')
+            elif self.period is None:
+                self.dateOfNextKnowledgeTest = self.dateOfNextKnowledgeTest
+            else:
+                self.dateOfNextKnowledgeTest = self.dateOfKnowledgeTest + timedelta(days=self.period.period)
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         #return self.dateOfNextKnowledgeTest.strftime("%Y-%m-%d")

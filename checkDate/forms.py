@@ -1,20 +1,8 @@
 from django.forms import ModelForm
-from import_export.forms import ConfirmImportForm, ImportForm
+from import_export.forms import ConfirmImportForm, ImportForm, ExportForm
 
 from .models.models import *
 from django import forms
-
-
-class CustomImportForm(ImportForm):
-    period = forms.ModelChoiceField(
-        queryset=Period.objects.all(),
-        required=True)
-
-
-class CustomConfirmImportForm(ConfirmImportForm):
-    period = forms.ModelChoiceField(
-        queryset=Period.objects.all(),
-        required=True)
 
 
 class MedicalExaminationModelForm(forms.ModelForm):
@@ -23,7 +11,8 @@ class MedicalExaminationModelForm(forms.ModelForm):
         fields = '__all__'
 
 
-class DataImportForm(ModelForm):
-    class Meta:
-        model = ImportData
-        fields = ('csv_file',)
+class CustomExportForm(ExportForm):
+    """Customized ExportForm, with author field required."""
+    dept = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        required=True)

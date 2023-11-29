@@ -32,7 +32,7 @@ class UserForDateCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserForDate
-        fields = ['full_name', 'dept', 'position']
+        fields = ['full_name', 'dept', 'position', 'status', 'order_number']
 
 
 class UserForDateSerializer(serializers.ModelSerializer):

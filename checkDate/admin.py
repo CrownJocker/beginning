@@ -1,12 +1,11 @@
-from checkDate.mixins.mixins import *
+from checkDate.forms import CustomExportForm
 import re
 from django.contrib import admin
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from checkDate.models.models import *
 from organisation.models import Filial
-import pandas as pd
 
 
 class MembersResource(resources.ModelResource):
@@ -54,7 +53,13 @@ class EventsResource(resources.ModelResource):
         knowledge_test = None
 
         # Создание объектов модели MedicalExamination
-        dateOfMedicalExamination = row["Дата прохождения медосмотра"]
+        # dateOfMedicalExamination = row["Дата прохождения медосмотра"]
+        try:
+            dateOfMedicalExamination = row["Дата прохождения медосмотра"]
+            # Ваш код для обработки значения period_value
+        except KeyError:
+            # Обработка случая, когда столбец "Периодичность" отсутствует
+            dateOfMedicalExamination = None
 
         if dateOfMedicalExamination and dateOfMedicalExamination is not None:
             date_str = re.findall(r'\d{2}.\d{2}.\d{4}', str(dateOfMedicalExamination))
@@ -63,7 +68,13 @@ class EventsResource(resources.ModelResource):
                 formatted_date = date_obj.strftime('%Y-%m-%d')
                 dateOfMedicalExamination = formatted_date
 
-        dateOfNextMedicalExamination = row["Дата следующего прохождения медосмотра"]
+        # dateOfNextMedicalExamination = row["Дата следующего прохождения медосмотра"]
+        try:
+            dateOfNextMedicalExamination = row["Дата следующего прохождения медосмотра"]
+            # Ваш код для обработки значения period_value
+        except KeyError:
+            # Обработка случая, когда столбец "Периодичность" отсутствует
+            dateOfNextMedicalExamination = None
         try:
             period_value = row["Периодичность"]
             # Ваш код для обработки значения period_value
@@ -96,8 +107,23 @@ class EventsResource(resources.ModelResource):
                 )
 
         # Создание объектов модели KnowledgeTest
-        dateOfKnowledgeTest = row["Дата последней проверки знаний"]
-        dateOfNextKnowledgeTest = row["Дата следующей проверки знаний"]
+
+        try:
+            dateOfKnowledgeTest = row["Дата последней проверки знаний"]
+        except KeyError:
+            dateOfKnowledgeTest = None
+
+        if dateOfKnowledgeTest is not None:
+            date_str = re.findall(r'\d{2}.\d{2}.\d{4}', str(dateOfKnowledgeTest))
+            if date_str:
+                date_obj = datetime.strptime(date_str[0], '%d.%m.%Y').date()
+                formatted_date = date_obj.strftime('%Y-%m-%d')
+                dateOfKnowledgeTest = formatted_date
+
+        try:
+            dateOfNextKnowledgeTest = row["Дата следующей проверки знаний"]
+        except KeyError:
+            dateOfNextKnowledgeTest = None
 
         if dateOfKnowledgeTest and period_value and dateOfNextKnowledgeTest:  # Проверяем, что поля не пустые
             period, _ = Period.objects.get_or_create(name=period_value)
@@ -125,19 +151,27 @@ class EventsResource(resources.ModelResource):
         filial = Filial.objects.get(id=1)
         user_dept_value = row["Отдел"]  # Значение для поля user_dept
         user_position_value = row["Должность"]
-
+        position_objects = [position.strip() for position in user_position_value.split('/')]
         if user_fullname and user_dept_value and user_position_value:  # Проверяем, что поля не пустые
-            user_position, _ = Position.objects.get_or_create(
-                position=user_position_value, )
-            user_dept, _ = Department.objects.get_or_create(
-                name=user_dept_value, filial=filial)  # Создаем объект UserDept или получаем существующий
+            # user_position, _ = Position.objects.get_or_create(
+            #    position=user_position_value, )
+            # user_position, _ = Position.objects.bulk_create(position_objects)
+            positions = []
+            for position_name in position_objects:
+                user_position = Position.objects.filter(position__exact=position_name).first()
+                positions.append(user_position)
+
+            user_dept, _ = Department.objects.get_or_create(name=user_dept_value,
+                                                            filial=filial)  # Создаем объект UserDept или получаем существующий
+
             user_for_date, created = UserForDate.objects.update_or_create(
                 full_name=user_fullname,
                 defaults={
                     'dept': user_dept,
-                    'position': user_position,
                 }
             )
+
+            user_for_date.position.set(positions)
 
             events_for_user, _ = EventsForUser.objects.update_or_create(
                 user=user_for_date,
@@ -148,38 +182,19 @@ class EventsResource(resources.ModelResource):
             )
 
     user = fields.Field(column_name='Ф.И.О.', attribute='user',
-                            widget=ForeignKeyWidget(UserForDate, 'full_name'))
-    dateOfMedicalExamination = fields.Field(column_name="Дата прохождения медосмотра",
-                 attribute='MedicalExamination',
-                 widget=CustomDateForeignKeyWidget(MedicalExamination, 'dateOfMedicalExamination'))
+                        widget=ForeignKeyWidget(UserForDate, 'full_name'))
 
-    dept = fields.Field(column_name='Отдел', attribute='dept',
+    dept = fields.Field(column_name='Отдел', attribute='user__dept',
                         widget=ForeignKeyWidget(Department, 'name'))
-    position = fields.Field(column_name='Должность', attribute='position',
-                            widget=ForeignKeyWidget(Position, 'position'))
-    # period_name = fields.Field(column_name='Имя', attribute='name',
-    #                           widget=ForeignKeyWidget(Period, 'name'))
-    # period_name = fields.Field(column_name='Периодичность', attribute='period',
-    #                             widget=ForeignKeyWidget(Period, 'name'))
-    #dateOfME = fields.Field(column_name="Дата прохождения медосмотра",
-    #                                        attribute='dateOfMedicalExamination',
-    #                                        widget=CustomDateForeignKeyWidget(MedicalExamination, 'dateOfMedicalExamination'))
-
-    #dateOfNextME = fields.Field(column_name="Дата следующего проходения медосмотра",
-    #                                            attribute='dateOfNextMedicalExamination',
-    #                                            widget=ForeignKeyWidget(MedicalExamination,
-    #                                                                    'dateOfNextMedicalExamination'))
+    position = fields.Field(column_name='Должность', attribute='user__position',
+                            widget=ManyToManyWidget(Position, field='position', separator='/'))
 
     class Meta:
         model = EventsForUser
         force_init_instance = False
         import_id_fields = ('user',)
-        fields = ('user', 'medicalExamination', 'knowledgeTest')
-
-    # def dehydrate_full_title(self, EventsForUser):
-    #    event_name = getattr(EventsForUser, "user", "unknown")
-    #    user_name = getattr(EventsForUser.user, "full_name", "unknown")
-    #    return '%s by %s' % (event_name, user_name)
+        fields = ('user', 'knowledgeTest__dateOfKnowledgeTest', 'knowledgeTest__dateOfNextKnowledgeTest',
+                  'medicalExamination__dateOfMedicalExamination', 'medicalExamination__dateOfNextMedicalExamination')
 
 
 class MEResource(resources.ModelResource):
@@ -216,7 +231,8 @@ class ImportDataAdmin(admin.ModelAdmin):
 class EventsForUserAdmin(ImportExportModelAdmin):
     list_display = ('user', 'medicalExamination', 'knowledgeTest', 'knowledgeTest_dateOfKnowledgeTest', 'id')
     resource_classes = [EventsResource]
-    #resource_classes = [MembersResource]
+    # resource_classes = [MembersResource]
+    export_form_class = CustomExportForm
 
     def knowledgeTest_dateOfKnowledgeTest(self, obj):
         if obj.knowledgeTest:
@@ -255,4 +271,14 @@ class PeriodAdmin(ImportExportModelAdmin):
 
 @admin.register(UserForDate)
 class UserForDateAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'dept', 'position', 'id')
+    list_display = ('full_name', 'dept', 'get_positions', 'id')
+
+    def get_positions(self, obj):
+        return ", ".join([str(pos) for pos in obj.position.all()])
+
+    get_positions.short_description = 'Выбранные должности'
+
+
+@admin.register(Status)
+class StatusAdmin(admin.ModelAdmin):
+    list_display = ('status', 'id')
